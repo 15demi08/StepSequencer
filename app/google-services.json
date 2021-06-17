@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "345620324746",
+    "project_id": "senac-login-firebase",
+    "storage_bucket": "senac-login-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345620324746:android:b4fd014964f98a6fae6873",
+        "android_client_info": {
+          "package_name": "com.demetriusjr.stepsequencer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345620324746-56eoef7idj8o0uii6l18hurd45akrvq6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.demetriusjr.stepsequencer",
+            "certificate_hash": "fd174994017c795cb02fe237a5ead699d179b258"
+          }
+        },
+        {
+          "client_id": "345620324746-oo4be1q1qje8le8152vqb1bm02hn3qns.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2QKZAiWzW-1DlCsWXyYNaQE3RDbBYQ7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345620324746-oo4be1q1qje8le8152vqb1bm02hn3qns.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
