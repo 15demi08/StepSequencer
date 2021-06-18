@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/barContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/barBackGround"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="@+id/imageButton">
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/kick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/closedHiHat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:checked="false" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/closedHiHat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/kick"
+            app:layout_constraintEnd_toStartOf="@+id/openHiHat"
+            app:layout_constraintStart_toEndOf="@+id/kick"
+            app:layout_constraintTop_toTopOf="@+id/kick"
+            tools:checked="false" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/openHiHat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/closedHiHat"
+            app:layout_constraintEnd_toStartOf="@+id/ride"
+            app:layout_constraintStart_toEndOf="@+id/closedHiHat"
+            app:layout_constraintTop_toTopOf="@+id/closedHiHat"
+            tools:checked="false" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/ride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/openHiHat"
+            app:layout_constraintEnd_toStartOf="@+id/clap"
+            app:layout_constraintStart_toEndOf="@+id/openHiHat"
+            app:layout_constraintTop_toTopOf="@+id/openHiHat"
+            tools:checked="false" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/clap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/ride"
+            app:layout_constraintEnd_toStartOf="@+id/crash"
+            app:layout_constraintStart_toEndOf="@+id/ride"
+            app:layout_constraintTop_toTopOf="@+id/ride"
+            tools:checked="false" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/crash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            app:layout_constraintBottom_toBottomOf="@+id/clap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/clap"
+            app:layout_constraintTop_toTopOf="@+id/clap" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/mainScreen_btnRemoveBar"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <Button
+        android:id="@+id/btnAddBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/mainScreen_btnAddBar"
+        app:backgroundTint="@color/teal_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+</androidx.constraintlayout.widget.ConstraintLayout>

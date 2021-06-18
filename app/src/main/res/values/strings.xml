@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">StepSequencer</string>
+    <string name="mainScreen_btnPlay_desc">Play Button</string>
+    <string name="mainScreen_btnSave_desc">Save Button</string>
+    <string name="mainScreen_btnAddBar">Add Bar</string>
+    <string name="mainScreen_btnRemoveBar">Remove Bar</string>
+    <string name="mainScreen_BtnPlayHint">Play</string>
+    <string name="mainScreen_btnSaveHint">Save</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
