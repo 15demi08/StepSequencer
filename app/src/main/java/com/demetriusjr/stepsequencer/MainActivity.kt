@@ -1,12 +1,8 @@
 package com.demetriusjr.stepsequencer
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.demetriusjr.stepsequencer.databinding.ActivityMainBinding
-import com.demetriusjr.stepsequencer.model.Song
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class MainActivity : AppCompatActivity() {
 

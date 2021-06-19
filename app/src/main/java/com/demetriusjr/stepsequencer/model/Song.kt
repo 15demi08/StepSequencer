@@ -3,42 +3,27 @@ package com.demetriusjr.stepsequencer.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Song ( var name:String? = null, var tempo:Int = 4 ) {
+class Song ( var name:String? = null, var tempo:Int ) {
 
-    private var bars:ArrayList<Bar> = ArrayList()
+    var bars:ArrayList<Bar> = ArrayList()
 
     /**
-     *  Adds a Bar to the Song
-     *
-     *  0: Kick,
-     *  1: Closed Hi-Hat,
-     *  2: Open Hi-Hat,
-     *  3: Ride,
-     *  4: Clap (Snare),
-     *  5: Crash
+     * Adds an empty Bar to the Song
      */
-    fun addBar(instruments: Array<Boolean>){
-        bars.add(
-            Bar(
-                instruments[0],
-                instruments[1],
-                instruments[2],
-                instruments[3],
-                instruments[4],
-                instruments[5]
-            )
-        )
+    fun addBar(){
+        bars.add( Bar() )
+    }
+
+    fun addBar( b:Bar ){
+        bars.add(b)
     }
 
     /**
-     * Returns a Bar from the Song
+     * Removes the Bar at position p
      */
-    fun getBar( i:Int ):Bar = bars[i]
-
-    /**
-     * Removes a Bar from the Song
-     */
-    fun removeBar( i:Int ) = bars.removeAt(i)
+    fun removeBar( p:Int ){
+        bars.removeAt(p)
+    }
 
     /**
      * Represents a Bar in the Song. A Bar indicates what samples get played at any given point in
@@ -46,12 +31,12 @@ class Song ( var name:String? = null, var tempo:Int = 4 ) {
      */
     @Serializable
     data class Bar(
-        var kick:Boolean,
-        var closedHiHat:Boolean,
-        var openHiHat:Boolean,
-        var ride:Boolean,
-        var clap:Boolean,
-        var crash:Boolean
+        var kick:Boolean = false,
+        var closedHiHat:Boolean = false,
+        var openHiHat:Boolean = false,
+        var ride:Boolean = false,
+        var clap:Boolean = false,
+        var crash:Boolean = false
     )
 
 }

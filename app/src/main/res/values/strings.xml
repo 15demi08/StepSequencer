@@ -8,4 +8,13 @@
     <string name="mainScreen_btnSaveHint">Save</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mainScreen_songNameHint">Song Name</string>
+    <string name="mainScreen_headers_kick">K</string>
+    <string name="mainScreen_headers_closedHiHat">CHH</string>
+    <string name="mainScreen_headers_openHiHat">OHH</string>
+    <string name="mainScreen_headers_clap">CL</string>
+    <string name="mainScreen_headers_ride">R</string>
+    <string name="mainScreen_headers_crash">CR</string>
+    <string name="mainScreen_tempo">Tempo:</string>
+    <string name="mainScreen_btnEditSongNameDesc">Edit Song name</string>
 </resources>
