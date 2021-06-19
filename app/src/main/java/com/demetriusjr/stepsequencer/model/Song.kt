@@ -1,11 +1,16 @@
 package com.demetriusjr.stepsequencer.model
 
+import com.google.firebase.firestore.DocumentId
 import kotlinx.serialization.Serializable
 
-@Serializable
-class Song ( var name:String? = null, var tempo:Int ) {
+class Song {
 
+    @DocumentId
+    var id:String? = null;
+    var tempo:Int = 4
+    var name:String? = null
     var bars:ArrayList<Bar> = ArrayList()
+    var barsJSON:String? = null
 
     /**
      * Adds an empty Bar to the Song
@@ -14,8 +19,14 @@ class Song ( var name:String? = null, var tempo:Int ) {
         bars.add( Bar() )
     }
 
-    fun addBar( b:Bar ){
-        bars.add(b)
+    fun isEmpty():Boolean {
+        var r = true
+        for( b:Bar in bars )
+            b.also {
+                if( it.kick || it.closedHiHat || it.openHiHat || it.ride || it.clap || it.crash )
+                    r = false
+            }
+        return r
     }
 
     /**

@@ -70,6 +70,19 @@
             app:layout_constraintStart_toEndOf="@+id/btnEditSongName"
             app:layout_constraintTop_toTopOf="@+id/songName" />
 
+        <ImageButton
+            android:id="@+id/btnNewSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/mainScreen_btnNewSongDesc"
+            android:scaleX=".75"
+            android:scaleY=".75"
+            android:src="@android:drawable/ic_input_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -174,12 +187,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnPlaySong"
-            android:layout_width="0dp"
+        <ToggleButton
+            android:id="@+id/btnPlayStop"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/mainScreen_btnPlay_desc"
-            android:src="@android:drawable/ic_media_play"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:checked="false"
+            android:textOff="@string/mainScreen_playSong"
+            android:textOn="@string/mainScreen_stopSong"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -187,14 +204,13 @@
             android:id="@+id/lblTempo"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
             android:background="@color/white"
             android:gravity="center_vertical"
             android:text="@string/mainScreen_tempo"
-            app:layout_constraintBottom_toBottomOf="@id/btnPlaySong"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPlayStop"
             app:layout_constraintEnd_toStartOf="@+id/songTempo"
-            app:layout_constraintStart_toEndOf="@+id/btnPlaySong"
-            app:layout_constraintTop_toTopOf="@id/btnPlaySong" />
+            app:layout_constraintStart_toEndOf="@+id/btnPlayStop"
+            app:layout_constraintTop_toTopOf="@+id/btnPlayStop" />
 
         <Spinner
             android:id="@+id/songTempo"
@@ -202,9 +218,9 @@
             android:layout_height="0dp"
             android:background="@color/white"
             android:entries="@array/songTempos"
-            app:layout_constraintBottom_toBottomOf="@id/btnPlaySong"
+            app:layout_constraintBottom_toBottomOf="@+id/lblTempo"
             app:layout_constraintStart_toEndOf="@id/lblTempo"
-            app:layout_constraintTop_toTopOf="@id/btnPlaySong" />
+            app:layout_constraintTop_toTopOf="@+id/lblTempo" />
 
         <ImageButton
             android:id="@+id/btnSaveSong"
@@ -212,7 +228,29 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/mainScreen_btnSave_desc"
             android:src="@android:drawable/ic_menu_save"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnSavedSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/mainScreen_btnSavedSongsDesc"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSaveSong"
+            app:layout_constraintEnd_toStartOf="@+id/btnSaveSong"
+            app:layout_constraintTop_toTopOf="@+id/btnSaveSong" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/loop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/mainScreen_loop"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/songTempo"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

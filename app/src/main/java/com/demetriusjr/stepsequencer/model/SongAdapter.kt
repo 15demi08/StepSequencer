@@ -55,6 +55,7 @@ class SongAdapter( private val viewModel:SequencerViewModel, private val barFunc
             if(position != itemCount - 1)
                 visibility = View.GONE
             else
+                visibility = View.VISIBLE
                 setOnClickListener{ barFunctions.addBar() }
         }
 

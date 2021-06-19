@@ -1,5 +1,6 @@
 package com.demetriusjr.stepsequencer.fragments
 
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -7,18 +8,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
+import android.widget.ToggleButton
+import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demetriusjr.stepsequencer.R
 import com.demetriusjr.stepsequencer.databinding.SequencerFragmentBinding
 import com.demetriusjr.stepsequencer.model.Song
 import com.demetriusjr.stepsequencer.model.SongAdapter
+import com.demetriusjr.stepsequencer.service.SongClient
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlin.time.*
 
 class SequencerFragment : SongAdapter.BarFunctions, Fragment() {
@@ -27,55 +33,56 @@ class SequencerFragment : SongAdapter.BarFunctions, Fragment() {
     private val binding
         get() = _binding
 
-    private lateinit var viewModel: SequencerViewModel
-    private lateinit var kickSample: MediaPlayer
-    private lateinit var closedHiHatSample: MediaPlayer
-    private lateinit var openHiHatSample: MediaPlayer
-    private lateinit var rideSample: MediaPlayer
-    private lateinit var clapSample: MediaPlayer
-    private lateinit var crashSample: MediaPlayer
+    private val viewModel: SequencerViewModel by navGraphViewModels(R.id.sequencerFragment)
+    private lateinit var sc:SongClient
+
+    private var loopSong:Boolean = false
+    private lateinit var playingSong:CountDownTimer
 
     override fun onCreateView( inflater:LayoutInflater, container:ViewGroup?, savedInstanceState:Bundle? ):View {
 
-        kickSample = MediaPlayer.create(this.context, R.raw.kick)
-        closedHiHatSample = MediaPlayer.create(this.context, R.raw.hihat_c)
-        openHiHatSample = MediaPlayer.create(this.context, R.raw.hihat_o)
-        rideSample = MediaPlayer.create(this.context, R.raw.ride)
-        clapSample = MediaPlayer.create(this.context, R.raw.clap)
-        crashSample = MediaPlayer.create(this.context, R.raw.crash)
-
         _binding = SequencerFragmentBinding.inflate(layoutInflater, container, false)
-
         return binding.root
 
     }
 
-    @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(SequencerViewModel::class.java)
-        viewModel.currentSong = Song("Test Song", 4).apply {
-            addBar(Song.Bar(true, true, false, false, false, false))
-            addBar(Song.Bar(false, true, false, false, false, false))
-            addBar(Song.Bar(false, true, false, false, true, false))
-            addBar(Song.Bar(false, true, false, false, false, false))
-        }
+        if( viewModel.currentSong == null )
+            viewModel.currentSong = Song().apply { addBar() }
 
         binding.apply {
 
             songName.apply {
-                setText(viewModel.currentSong!!.name)
+                setText( viewModel.currentSong!!.name ?: getString(R.string.mainScreen_unsavedSong) )
                 isEnabled = false
             }
 
-            songTempo.setSelection(viewModel.currentSong!!.tempo - 1)
+            songTempo.apply {
+                setSelection(viewModel.currentSong!!.tempo - 1)
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                    override fun onItemSelected( parent: AdapterView<*>?,view: View?, position: Int, id: Long ) {
+                        viewModel.currentSong!!.tempo = position+1
+                    }
 
-            btnPlaySong.setOnClickListener { playSong(it) }
-            btnSaveSong.setOnClickListener { saveSong(it) }
-            btnEditSongName.setOnClickListener { editSongName(it) }
-            btnSaveNewSongName.setOnClickListener { saveNewSongName(it) }
-            btnCancelEditSongName.setOnClickListener { cancelEditSongName(it) }
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        Log.i("StepSequencer", "spinner.onNothingSelected")
+                    }
+
+                }
+            }
+
+            btnSavedSongs.setOnClickListener { findNavController().navigate(R.id.action_sequencerFragment_to_savedSongsFragment) }
+            btnNewSong.setOnClickListener { newSong() }
+            btnPlayStop.setOnClickListener { playOrStopSong(it) }
+            btnSaveSong.setOnClickListener { saveSong() }
+            btnEditSongName.setOnClickListener { editSongName() }
+            btnSaveNewSongName.setOnClickListener { saveNewSongName() }
+            btnCancelEditSongName.setOnClickListener { cancelEditSongName() }
+            loop.setOnClickListener {
+                loopSong = (it as SwitchCompat).isChecked
+            }
 
             val manager = LinearLayoutManager(context)
             val songAdapter = SongAdapter(viewModel, this@SequencerFragment)
@@ -90,37 +97,100 @@ class SequencerFragment : SongAdapter.BarFunctions, Fragment() {
 
     }
 
-    fun playSong(v:View ){
+    private fun playOrStopSong(v:View ) {
+        if ((v as ToggleButton).isChecked) {
+
+            Log.i("StepSequencer", "should play, looping: $loopSong")
+            playSong()
+
+        } else {
+
+            Log.i("StepSequencer", "should stop")
+            stopSong()
+
+        }
+    }
+
+    fun newSong(){
+        viewModel.currentSong = Song().apply { addBar() }
+        binding.bars.adapter?.notifyDataSetChanged()
+    }
+
+    private fun playSong() {
 
         Log.i("StepSequencer", "Rodando")
 
         val interval = 1000 / viewModel.currentSong!!.tempo
         var currentBar = 0
-        var song = viewModel.currentSong!!.bars
+        val song = viewModel.currentSong!!.bars
 
-        object : CountDownTimer((song.size * interval).toLong(), interval.toLong()) {
+        // TODO: FIND A BETTER WAY TO DO THIS
+        playingSong = object : CountDownTimer((song.size * interval).toLong(), interval.toLong()) {
             override fun onTick(millisUntilFinished: Long) {
-                song[currentBar].apply {
-                    if (kick) kickSample.apply { if (isPlaying) seekTo(0); start() }
-                    if (closedHiHat) closedHiHatSample.apply { if (isPlaying) seekTo(0); start() }
-                    if (openHiHat) openHiHatSample.apply { if (isPlaying) seekTo(0); start() }
-                    if (ride) rideSample.apply { if (isPlaying) seekTo(0); start() }
-                    if (clap) clapSample.apply { if (isPlaying) seekTo(0); start() }
-                    if (crash) crashSample.apply { if (isPlaying) seekTo(0); start() }
+                if(currentBar < song.size) {
+                    song[currentBar].apply {
+                        if (kick) playSample(R.raw.kick)
+                        if (closedHiHat) playSample(R.raw.hihat_c)
+                        if (openHiHat) playSample(R.raw.hihat_o)
+                        if (ride) playSample(R.raw.ride)
+                        if (clap) playSample(R.raw.clap)
+                        if (crash) playSample(R.raw.crash)
+                    }
+                    currentBar++
                 }
-                currentBar++
             }
             override fun onFinish() {
+                if(loopSong) {
+                    currentBar = 0
+                    start()
+                } else {
+                    binding.btnPlayStop.isChecked = false
+                }
             }
         }.start()
 
     }
 
-    fun saveSong( v:View ){
-        Log.i("StepSequencer", Json.encodeToString(viewModel.currentSong!!))
+    private fun playSample ( id:Int ) =
+        MediaPlayer.create(this@SequencerFragment.context, id).apply {
+            start()
+            setOnCompletionListener {
+                it.release()
+            }
+        }
+
+    private fun stopSong(){
+        playingSong.cancel()
     }
 
-    fun editSongName( v:View ){
+    fun saveSong(){
+
+        sc = SongClient()
+
+        if(viewModel.currentSong!!.name == null) {
+            showSnack(R.string.mainScreen_msgUnnamedSong)
+        } else if (viewModel.currentSong!!.isEmpty()){
+            showSnack(R.string.mainScreen_msgSongEmpty)
+        } else {
+            if(viewModel.currentSong!!.id == null)
+                sc.new(viewModel.currentSong!!)
+                    .addOnSuccessListener {
+                        showSnack(R.string.mainScreen_msgNewSuccess)
+                    }
+            else
+                sc.update(viewModel.currentSong!!)
+                    .addOnSuccessListener {
+                        showSnack(R.string.mainScreen_msgUpdateSuccess)
+                    }
+        }
+
+    }
+
+    private fun showSnack( msg:Int ){
+        Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT ).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show()
+    }
+
+    private fun editSongName(){
         binding.apply {
             songName.isEnabled = true
             btnEditSongName.visibility = View.GONE
@@ -129,7 +199,7 @@ class SequencerFragment : SongAdapter.BarFunctions, Fragment() {
         }
     }
 
-    fun cancelEditSongName ( v:View ){
+    private fun cancelEditSongName (){
         binding.apply {
             songName.apply {
                 setText(viewModel.currentSong!!.name)
@@ -141,7 +211,7 @@ class SequencerFragment : SongAdapter.BarFunctions, Fragment() {
         }
     }
 
-    fun saveNewSongName ( v:View ){
+    private fun saveNewSongName (){
         binding.apply {
             viewModel.currentSong!!.name = songName.text.toString()
             songName.isEnabled = false
@@ -161,6 +231,16 @@ class SequencerFragment : SongAdapter.BarFunctions, Fragment() {
         binding.bars.apply {
             adapter?.notifyDataSetChanged()
             getChildAt(adapter!!.itemCount-1).findViewById<Button>(R.id.btnAddBar).visibility = View.VISIBLE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.apply {
+            songName.setText(viewModel.currentSong!!.name)
+            songTempo.setSelection(viewModel.currentSong!!.tempo - 1)
+            bars.adapter?.notifyDataSetChanged()
         }
     }
 

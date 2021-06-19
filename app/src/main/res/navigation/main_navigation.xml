@@ -9,5 +9,22 @@
         android:id="@+id/sequencerFragment"
         android:name="com.demetriusjr.stepsequencer.fragments.SequencerFragment"
         android:label="sequencer_fragment"
-        tools:layout="@layout/sequencer_fragment" />
+        tools:layout="@layout/sequencer_fragment" >
+        <action
+            android:id="@+id/action_sequencerFragment_to_savedSongsFragment"
+            app:destination="@id/savedSongsFragment" />
+        <action
+            android:id="@+id/action_sequencerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/savedSongsFragment"
+        android:name="com.demetriusjr.stepsequencer.fragments.SavedSongsFragment"
+        android:label="fragment_saved_songs"
+        tools:layout="@layout/fragment_saved_songs" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.demetriusjr.stepsequencer.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>

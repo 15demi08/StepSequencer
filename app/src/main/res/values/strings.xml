@@ -6,8 +6,6 @@
     <string name="mainScreen_btnRemoveBar">Remove Bar</string>
     <string name="mainScreen_BtnPlayHint">Play</string>
     <string name="mainScreen_btnSaveHint">Save</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mainScreen_songNameHint">Song Name</string>
     <string name="mainScreen_headers_kick">K</string>
     <string name="mainScreen_headers_closedHiHat">CHH</string>
@@ -17,4 +15,17 @@
     <string name="mainScreen_headers_crash">CR</string>
     <string name="mainScreen_tempo">Tempo:</string>
     <string name="mainScreen_btnEditSongNameDesc">Edit Song name</string>
+    <string name="mainScreen_btnNewSongDesc">New Song</string>
+    <string name="mainScreen_btnSavedSongsDesc">Saved Songs</string>
+    <string name="mainScreen_loop">Loop</string>
+    <string name="mainScreen_playSong">Play</string>
+    <string name="mainScreen_stopSong">Stop</string>
+    <string name="savedSongsScreen_btnDeleteDesc">Delete Song</string>
+    <string name="savedSongsScreen_btnEditDesc">Edit Song</string>
+    <string name="mainScreen_unsavedSong">New Song</string>
+    <string name="mainScreen_msgNewSuccess">Song saved successfully!</string>
+    <string name="mainScreen_msgUpdateSuccess">Song updated sucessfully!</string>
+    <string name="mainScreen_msgSongEmpty">An empty song can\'t be saved.</string>
+    <string name="mainScreen_msgUnnamedSong">Name your song first.</string>
+    <string name="mainScreen_menuBtnSave">Save</string>
 </resources>

@@ -7,6 +7,6 @@ import com.demetriusjr.stepsequencer.model.User
 class SequencerViewModel : ViewModel() {
 
     var currentSong:Song? = null
-    var currentUser:User? = null
+    //var currentUser:User? = null
 
 }
